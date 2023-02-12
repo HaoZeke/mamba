@@ -106,8 +106,8 @@ class TestEnv:
         env_json = run_env("list", "--json")
         env_2_fp = str(self.root_prefix / "envs" / self.env_name_2)
         env_3_fp = str(self.root_prefix / "envs" / self.env_name_3)
-        assert str(env_2_fp) in env_json["envs"]
-        assert str(env_3_fp) in env_json["envs"]
+        assert env_2_fp in env_json["envs"]
+        assert env_3_fp in env_json["envs"]
 
         shutil.rmtree(env_2_fp)
         env_json = run_env("list", "--json")

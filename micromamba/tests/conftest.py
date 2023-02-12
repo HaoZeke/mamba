@@ -15,7 +15,7 @@ def tmp_home(tmp_path: pathlib.Path) -> Generator[pathlib.Path, None, None]:
     home_envs = ["HOME", "USERPROFILE"]
     old_homes = {name: os.environ.get(name) for name in home_envs}
 
-    if len(home_envs) > 0:
+    if home_envs:
         new_home = tmp_path / "home"
         new_home.mkdir(parents=True, exist_ok=True)
         for env in home_envs:
@@ -83,9 +83,7 @@ def tmp_clean_env(
 @pytest.fixture(params=[helpers.random_string, "long_prefix_" * 20])
 def tmp_env_name(request) -> str:
     """Return the explicit or implicit parametrization."""
-    if callable(request.param):
-        return request.param()
-    return request.param
+    return request.param() if callable(request.param) else request.param
 
 
 @pytest.fixture
