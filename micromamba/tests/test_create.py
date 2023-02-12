@@ -48,9 +48,9 @@ class TestCreate:
         os.path.join(source_dir_path, "test_env-lock.yaml")
     )
 
-    def test_env_lockfile_step_path(step_number):
+    def test_env_lockfile_step_path(self):
         return os.path.join(
-            source_dir_path, f"envlockfile-check-step-{step_number}-lock.yaml"
+            source_dir_path, f"envlockfile-check-step-{self}-lock.yaml"
         )
 
     @classmethod
@@ -154,7 +154,7 @@ class TestCreate:
     def test_lockfile(self):
         cmd_prefix = ["-p", TestCreate.prefix]
         f_name = random_string()
-        spec_file = os.path.join(TestCreate.spec_files_location, f_name) + "-lock.yaml"
+        spec_file = f"{os.path.join(TestCreate.spec_files_location, f_name)}-lock.yaml"
         shutil.copyfile(TestCreate.test_lockfile_path, spec_file)
         assert os.path.exists(spec_file)
 
@@ -257,7 +257,7 @@ class TestCreate:
             cmd += ["-n", n]
 
         if yaml_name:
-            f_name = random_string() + ".yaml"
+            f_name = f"{random_string()}.yaml"
             spec_file = os.path.join(TestCreate.spec_files_location, f_name)
 
             if yaml_name == "prefix":
@@ -307,7 +307,7 @@ class TestCreate:
             expected_channels += ["cli"]
 
         if yaml:
-            f_name = random_string() + ".yaml"
+            f_name = f"{random_string()}.yaml"
             spec_file = os.path.join(TestCreate.spec_files_location, f_name)
 
             file_content = [
@@ -325,7 +325,7 @@ class TestCreate:
             expected_channels += ["env_var"]
 
         if rc_file:
-            f_name = random_string() + ".yaml"
+            f_name = f"{random_string()}.yaml"
             rc_file = os.path.join(TestCreate.spec_files_location, f_name)
 
             file_content = ["channels: [rc]"]
@@ -413,11 +413,7 @@ class TestCreate:
     )
     @pytest.mark.parametrize("outside_root_prefix", (False, True))
     def test_classic_specs(self, outside_root_prefix, existing_cache):
-        if outside_root_prefix:
-            p = TestCreate.other_prefix
-        else:
-            p = TestCreate.prefix
-
+        p = TestCreate.other_prefix if outside_root_prefix else TestCreate.prefix
         res = create("-p", p, "xtensor", "--json")
 
         assert res["success"]
@@ -514,7 +510,7 @@ class TestCreate:
                 os.environ.pop("MAMBA_ALWAYS_YES")
         else:  # rc_file
             rc_file = os.path.join(
-                TestCreate.spec_files_location, random_string() + ".yaml"
+                TestCreate.spec_files_location, f"{random_string()}.yaml"
             )
             with open(rc_file, "w") as f:
                 f.write("always_yes: true")
@@ -571,7 +567,7 @@ class TestCreate:
                 assert l["channel"].startswith(f"{ca}/bokeh/")
                 assert l["url"].startswith(f"{ca}/bokeh/")
 
-        f_name = random_string() + ".yaml"
+        f_name = f"{random_string()}.yaml"
         spec_file = os.path.join(TestCreate.spec_files_location, f_name)
 
         contents = [
@@ -599,7 +595,7 @@ class TestCreate:
                 assert l["version"].startswith("0.22.")
 
     def test_channel_nodefaults(self):
-        f_name = random_string() + ".yaml"
+        f_name = f"{random_string()}.yaml"
         rc_file = os.path.join(TestCreate.spec_files_location, f_name)
 
         content = [
@@ -609,7 +605,7 @@ class TestCreate:
         with open(rc_file, "w") as f:
             f.write("\n".join(content))
 
-        f_name = random_string() + ".yaml"
+        f_name = f"{random_string()}.yaml"
         spec_file = os.path.join(TestCreate.spec_files_location, f_name)
         contents = [
             "channels:",
@@ -684,7 +680,7 @@ class TestCreate:
         if cache_tag:
             pyc_fn = Path("__pycache__") / f"six.{cache_tag}.pyc"
         else:
-            pyc_fn = Path(f"six.pyc")
+            pyc_fn = Path("six.pyc")
 
         # Disable pyc compilation to ensure that files are still registered in conda-meta
         create(*cmd, "--no-pyc")

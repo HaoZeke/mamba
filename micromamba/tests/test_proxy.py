@@ -91,15 +91,15 @@ class TestProxy:
 
         if auth is not None:
             proxy_options = ["--proxyauth", urllib.parse.unquote(auth)]
-            proxy_url = "http://{}@localhost:{}".format(auth, unused_tcp_port)
+            proxy_url = f"http://{auth}@localhost:{unused_tcp_port}"
         else:
             proxy_options = []
-            proxy_url = "http://localhost:{}".format(unused_tcp_port)
+            proxy_url = f"http://localhost:{unused_tcp_port}"
 
         self.start_proxy(unused_tcp_port, proxy_options)
 
         cmd = ["xtensor"]
-        f_name = random_string() + ".yaml"
+        f_name = f"{random_string()}.yaml"
         rc_file = os.path.join(TestProxy.prefix, f_name)
 
         if ssl_verify:
@@ -111,9 +111,9 @@ class TestProxy:
 
         file_content = [
             "proxy_servers:",
-            "    http: {}".format(proxy_url),
-            "    https: {}".format(proxy_url),
-            "ssl_verify: {}".format(verify_string),
+            f"    http: {proxy_url}",
+            f"    https: {proxy_url}",
+            f"ssl_verify: {verify_string}",
         ]
         with open(rc_file, "w") as f:
             f.write("\n".join(file_content))
